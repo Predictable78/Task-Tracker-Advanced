@@ -1,5 +1,5 @@
-import { useState } from 'react'
-import { BrowserRouter as Router, Routes, Route, Navigate } from 'react-router-dom'
+import { useState, useEffect } from 'react'
+import { BrowserRouter as Router, Routes, Route, Navigate, useNavigate } from 'react-router-dom'
 import { AuthProvider, useAuth } from './contexts/AuthContext'
 import ErrorBoundary from './components/ErrorBoundary'
 import ProtectedRoute from './components/ProtectedRoute'
@@ -8,8 +8,15 @@ import RegisterForm from './components/RegisterForm'
 import UserDashboard from './components/UserDashboard'
 
 function AuthPage() {
-  const { login, register, loading } = useAuth()
+  const { login, register, loading, user } = useAuth()
   const [authMode, setAuthMode] = useState('login')
+  const navigate = useNavigate()
+
+  useEffect(() => {
+    if (user) {
+      navigate('/dashboard', { replace: true })
+    }
+  }, [user, navigate])
 
   if (authMode === 'login') {
     return (
